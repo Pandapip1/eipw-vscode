@@ -75,12 +75,6 @@ export function activate(context: vscode.ExtensionContext) : void {
 				errorLevel = 'good';
 			}
 
-			// Let users know it's okay to have no EIP number before submitting
-			if (snippet.title?.id === 'preamble-eip') {
-				formatted = `Info: EIP numbers will be provided by EIP editors once you submit a Pull Request. Do **not** self-assign EIP numbers.`;
-				errorLevel = 'good';
-			}
-
 			// Let users know it's okay to not have a discussions-to before submitting
 			if (snippet.title?.id === 'preamble-re-discussions-to') {
 				formatted = `Info: It is okay to not have a discussions-to link before submitting. Once you submit a Pull Request, please create a thread on https://ethereum-magicians.org/.`;
