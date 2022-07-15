@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
-import * as eipw from "eipw-lint-js";
+import * as eipw from 'eipw-lint-js';
+import * as path from 'path';
 
 import config from './config';
 
 export function activate(context: vscode.ExtensionContext) : void {
-	console.log("EIPw for VSCode activated");
+	console.log('EIPw for VSCode activated');
 
 	let timeout: NodeJS.Timer | undefined = undefined;
 
@@ -21,10 +22,10 @@ export function activate(context: vscode.ExtensionContext) : void {
 			return;
 		}
 
-		let trueFileName = activeEditor.document.fileName.split("/").pop()?.split("\\").pop();
+		let trueFileName = activeEditor.document.fileName.split('/').pop()?.split('\\').pop();
 
 		// If not an EIP: return
-		if (!trueFileName?.toLowerCase().endsWith(".md") || !trueFileName?.toLowerCase().startsWith("eip-")) {
+		if (!trueFileName?.toLowerCase().endsWith('.md') || !trueFileName?.toLowerCase().startsWith('eip-')) {
 			return;
 		}
 		
@@ -33,8 +34,18 @@ export function activate(context: vscode.ExtensionContext) : void {
 			decorationOptions[errorLevel] = [];
 		}
 
-		const result = await eipw.lint([ activeEditor.document.uri.fsPath ]);
-		console.log(`Active path: ${activeEditor.document.uri.fsPath}`);
+		console.log(`Current file: ${activeEditor.document.fileName}`);
+
+		const eipdir = path.resolve(activeEditor.document.fileName, '..');
+		const workdir = process.cwd();
+
+		console.log(`EIP directory: ${eipdir}`);
+		console.log(`Current Working directory: ${workdir}`);
+
+		process.chdir(eipdir);
+		const result = await eipw.lint([ activeEditor.document.fileName ]);
+		process.chdir(workdir);
+
 		console.log(`Raw eipw output: ${JSON.stringify(result, null, 2)}`);
 
 		for (let snippet of result) {
@@ -47,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) : void {
 			}
 
 			if (!formatted) {
-				formatted = "Failed to render diagnostic. This is a bug in eipw.";
+				formatted = 'Failed to render diagnostic. This is a bug in eipw.';
 			}
 			
 			let errorLevel: string = snippet.footer?.at(0)?.annotation_type || snippet.title?.annotation_type;
