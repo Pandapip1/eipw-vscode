@@ -17,3 +17,7 @@ This extension does not have any settings to configure. Everything works out-of-
 ## Known Issues
 
 See https://github.com/Pandapip1/eipw-vscode/issues
+
+## Credits
+
+Icons by <a target="_blank" href="https://icons8.com">Icons8</a>.
