@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as eipw from "eipw-lint-js";
-import * as path from "path";
 
 import config from './config';
 
@@ -11,8 +10,8 @@ export function activate(context: vscode.ExtensionContext) : void {
 
 	const errorStyleTypes : { [key: string]: vscode.TextEditorDecorationType } = {};
 	
-	for (let errorType in config.errorTypes) {
-		errorStyleTypes[errorType] = vscode.window.createTextEditorDecorationType(config.errorStyling[errorType]);
+	for (let errorLevel in config.errorLevels) {
+		errorStyleTypes[errorLevel] = vscode.window.createTextEditorDecorationType(config.errorLevels[errorLevel]);
 	}
 
 	let activeEditor = vscode.window.activeTextEditor;
@@ -30,13 +29,13 @@ export function activate(context: vscode.ExtensionContext) : void {
 		}
 		
 		const decorationOptions:  { [key: string]: vscode.DecorationOptions[] } = {};
-		for (let errorType in config.errorTypes) {
-			decorationOptions[errorType] = [];
+		for (let errorLevel in config.errorLevels) {
+			decorationOptions[errorLevel] = [];
 		}
 
 		const result = await eipw.lint([ activeEditor.document.uri.fsPath ]);
-		console.log(activeEditor.document.uri.fsPath);
-		console.log(JSON.stringify(result, null, 2));
+		console.log(`Active path: ${activeEditor.document.uri.fsPath}`);
+		console.log(`Raw eipw output: ${JSON.stringify(result, null, 2)}`);
 
 		for (let snippet of result) {
 			let formatted;
@@ -50,16 +49,49 @@ export function activate(context: vscode.ExtensionContext) : void {
 			if (!formatted) {
 				formatted = "Failed to render diagnostic. This is a bug in eipw.";
 			}
-
-			for (let errorType in config.errorTypes) {
-				if ('markdown-link-first' === errorType) {
-					decorationOptions[errorType].push({ range: activeEditor.document.lineAt(snippet.slices[0].line_start - 1).range, hoverMessage: formatted });
-				}
+			
+			let errorLevel: string = snippet.footer?.at(0)?.annotation_type || snippet.title?.annotation_type;
+			console.log(`${errorLevel}: ${formatted}`);
+			if (!errorLevel || !(errorLevel.toLowerCase() in decorationOptions)) {
+				errorLevel = 'help';
+			} else {
+				errorLevel = errorLevel.toLowerCase();
 			}
+
+			if (snippet.title?.id) {
+				formatted = `Error[${snippet.title?.id}]: ${formatted}`;
+			} else {
+				formatted = `Error: ${formatted}`;
+			}
+
+			// Currently bugged for some reason
+			if (snippet.title?.id === 'preamble-file-name') {
+				continue;
+			}
+
+			// Let users know it's okay to have no EIP number before submitting
+			if (snippet.title?.id === 'preamble-eip') {
+				formatted = `Info: EIP numbers will be provided by EIP editors. Do not self-assign EIP numbers.`;
+				errorLevel = 'good';
+			}
+
+			// Let users know it's okay to have no EIP number before submitting
+			if (snippet.title?.id === 'preamble-eip') {
+				formatted = `Info: EIP numbers will be provided by EIP editors once you submit a Pull Request. Do **not** self-assign EIP numbers.`;
+				errorLevel = 'good';
+			}
+
+			// Let users know it's okay to not have a discussions-to before submitting
+			if (snippet.title?.id === 'preamble-re-discussions-to') {
+				formatted = `Info: It is okay to not have a discussions-to link before submitting. Once you submit a Pull Request, please create a thread on https://ethereum-magicians.org/.`;
+				errorLevel = 'good';
+			}
+
+			decorationOptions[errorLevel].push({ range: activeEditor.document.lineAt(snippet.slices[0].line_start - 1).range, hoverMessage: formatted });
 		}
 		
-		for (let errorType in config.errorTypes) {
-			activeEditor.setDecorations(errorStyleTypes[errorType], decorationOptions[errorType]);
+		for (let errorLevel in config.errorLevels) {
+			activeEditor.setDecorations(errorStyleTypes[errorLevel], decorationOptions[errorLevel]);
 		}
 	}
 
