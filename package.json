@@ -21,6 +21,10 @@
 			}
 		]
 	},
+	"repository": {
+		"type": "git",
+		"url": "github:Pandapip1/eipw-vscode"
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"compile": "webpack",
