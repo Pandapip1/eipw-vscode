@@ -89,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) : void {
 			}
 
 			// Let users know it's okay to not have a discussions-to before submitting
-			if (snippet.title?.id === 'preamble-re-discussions-to' && isNewEip) {
+			if (snippet.title?.id === 'preamble-re-discussions-to' && isNewEip && snippet.slices[0].source === 'discussions-to: <URL>') {
 				formatted = `Info: It is okay to not have a discussions-to link before submitting. Once you submit a Pull Request, please create a thread on https://ethereum-magicians.org/.`;
 				errorLevel = 'good';
 			}
