@@ -15,12 +15,7 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "eipw-for-vsc.helloWorld",
-				"title": "Hello World"
-			}
-		]
+		"commands": []
 	},
 	"repository": {
 		"type": "git",
