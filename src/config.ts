@@ -10,11 +10,15 @@ export default {
             'textDecoration': 'underline dotted #00D2FF',
             'isWholeLine': true,
         },
+        'note': {
+            'textDecoration': 'underline dotted #00D2FF',
+            'isWholeLine': true,
+        },
         'info': {
             'textDecoration': 'underline wavy #00D2FF',
             'isWholeLine': true,
         },
-        'warn': {
+        'warning': {
             'textDecoration': 'underline wavy #D2FF00',
             'isWholeLine': true,
         },
