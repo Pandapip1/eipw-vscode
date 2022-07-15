@@ -48,6 +48,8 @@ export function activate(context: vscode.ExtensionContext) : void {
 
 		console.debug(`Raw eipw output: ${JSON.stringify(result, null, 2)}`);
 
+		let isNewEip = result.filter((snippet: any) => snippet.title?.id === 'preamble-eip' && snippet.slices[0].source === 'eip: <to be assigned>').length > 0;
+
 		for (let snippet of result) {
 			let formatted;
 
@@ -81,13 +83,13 @@ export function activate(context: vscode.ExtensionContext) : void {
 			}
 
 			// Let users know it's okay to have no EIP number before submitting
-			if (snippet.title?.id === 'preamble-eip') {
+			if (snippet.title?.id === 'preamble-eip' && isNewEip) {
 				formatted = `Info: EIP numbers will be provided by EIP editors. Do not self-assign EIP numbers.`;
 				errorLevel = 'good';
 			}
 
 			// Let users know it's okay to not have a discussions-to before submitting
-			if (snippet.title?.id === 'preamble-re-discussions-to') {
+			if (snippet.title?.id === 'preamble-re-discussions-to' && isNewEip) {
 				formatted = `Info: It is okay to not have a discussions-to link before submitting. Once you submit a Pull Request, please create a thread on https://ethereum-magicians.org/.`;
 				errorLevel = 'good';
 			}
