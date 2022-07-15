@@ -5,7 +5,7 @@ import * as path from 'path';
 import config from './config';
 
 export function activate(context: vscode.ExtensionContext) : void {
-	console.log('EIPw for VSCode activated');
+	console.debug('EIPw for VSCode activated');
 
 	let timeout: NodeJS.Timer | undefined = undefined;
 
@@ -34,19 +34,19 @@ export function activate(context: vscode.ExtensionContext) : void {
 			decorationOptions[errorLevel] = [];
 		}
 
-		console.log(`Current file: ${activeEditor.document.fileName}`);
+		console.debug(`Current file: ${activeEditor.document.fileName}`);
 
 		const eipdir = path.resolve(activeEditor.document.fileName, '..');
 		const workdir = process.cwd();
 
-		console.log(`EIP directory: ${eipdir}`);
-		console.log(`Current Working directory: ${workdir}`);
+		console.debug(`EIP directory: ${eipdir}`);
+		console.debug(`Current Working directory: ${workdir}`);
 
 		process.chdir(eipdir);
 		const result = await eipw.lint([ activeEditor.document.fileName ]);
 		process.chdir(workdir);
 
-		console.log(`Raw eipw output: ${JSON.stringify(result, null, 2)}`);
+		console.debug(`Raw eipw output: ${JSON.stringify(result, null, 2)}`);
 
 		for (let snippet of result) {
 			let formatted;
@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) : void {
 			}
 			
 			let errorLevel: string = snippet.footer?.at(0)?.annotation_type || snippet.title?.annotation_type;
-			console.log(`${errorLevel}: ${formatted}`);
+			console.debug(`${errorLevel}: ${formatted}`);
 			if (!errorLevel || !(errorLevel.toLowerCase() in decorationOptions)) {
 				errorLevel = 'help';
 			} else {
