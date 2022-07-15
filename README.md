@@ -16,4 +16,4 @@ This extension does not have any settings to configure. Everything works out-of-
 
 ## Known Issues
 
-See https://github.com/Pandpaip1/eipw-vscode/issues
+See https://github.com/Pandapip1/eipw-vscode/issues
