@@ -18,6 +18,14 @@ jobs:
         uses: justincy/github-action-npm-release@2.0.1
         id: release
 
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Dependencies
+        run: npm ci
+
       - name: Publish
         uses: lannonbr/vsce-action@3.0.0
         if: steps.release.outputs.released == 'true'
