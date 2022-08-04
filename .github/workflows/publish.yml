@@ -24,7 +24,7 @@ jobs:
           node-version: 16
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm i
 
       - name: Publish
         uses: lannonbr/vsce-action@3.0.0
