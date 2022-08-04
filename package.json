@@ -3,7 +3,7 @@
 	"displayName": "EIPw for VSCode",
 	"description": "Your companion for writing EIPs",
 	"icon": "media/eipw-vscode-icon.png",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"publisher": "pandapip1",
 	"engines": {
 		"vscode": "^1.69.0"
