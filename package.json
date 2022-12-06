@@ -34,7 +34,7 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"dependencies": {
-		"eipw-lint-js": "^0.2.0"
+		"eipw-lint-js": "^0.3.0"
 	},
 	"devDependencies": {
 		"@types/glob": "8.0.0",
