@@ -43,7 +43,7 @@
 		"@types/vscode": "1.74.0",
 		"@typescript-eslint/eslint-plugin": "5.50.0",
 		"@typescript-eslint/parser": "5.50.0",
-		"@vscode/test-electron": "2.2.2",
+		"@vscode/test-electron": "2.2.3",
 		"copy-webpack-plugin": "11.0.0",
 		"eslint": "8.33.0",
 		"glob": "8.1.0",
