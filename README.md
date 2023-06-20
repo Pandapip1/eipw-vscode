@@ -2,6 +2,10 @@
 
 So you want to write an EIP. But you don't know how to write an EIP.
 
+## Install
+
+Install from [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=pandapip1.eipw-vscode)
+
 ## Features
 
 - Checking with [`eipw`](https://github.com/SamWilsn/eipw)
