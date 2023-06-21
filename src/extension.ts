@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) : void {
 			let formatted;
 
 			try {
-				formatted = eipw.format(snippet);
+				formatted = eipw.format(snippet) as string;
 			} catch {
 				formatted = snippet.title?.label;
 			}
@@ -62,6 +62,8 @@ export function activate(context: vscode.ExtensionContext) : void {
 			if (!formatted) {
 				formatted = 'Failed to render diagnostic. This is a bug in eipw.';
 			}
+
+			formatted = formatted.replace(' | ', '\n');
 			
 			let errorLevel: string = snippet.footer?.at(0)?.annotation_type || snippet.title?.annotation_type;
 			console.debug(`${errorLevel}: ${formatted}`);
@@ -77,11 +79,6 @@ export function activate(context: vscode.ExtensionContext) : void {
 				formatted = `Error: ${formatted}`;
 			}
 
-			// Currently bugged for some reason
-			if (snippet.title?.id === 'preamble-file-name') {
-				continue;
-			}
-
 			// Let users know it's okay to have no EIP number before submitting
 			if (snippet.title?.id === 'preamble-eip' && isNewEip) {
 				formatted = `Info: EIP numbers will be provided by EIP editors. Do not self-assign EIP numbers.`;
@@ -94,7 +91,11 @@ export function activate(context: vscode.ExtensionContext) : void {
 				errorLevel = 'good';
 			}
 
-			decorationOptions[errorLevel].push({ range: activeEditor.document.lineAt(snippet.slices[0].line_start - 1).range, hoverMessage: formatted });
+			try {
+				decorationOptions[errorLevel].push({ range: activeEditor.document.lineAt(snippet.slices[0].line_start - 1).range, hoverMessage: formatted });
+			} catch (e) {
+				console.error(e);
+			}
 		}
 		
 		for (let errorLevel in config.errorLevels) {
