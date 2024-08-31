@@ -27,7 +27,7 @@ jobs:
         run: npm i
 
       - name: Publish
-        uses: lannonbr/vsce-action@3.0.0
+        uses: lannonbr/vsce-action@4.0.0
         if: steps.release.outputs.released == 'true'
         with:
           args: "publish -p $VSCE_TOKEN"
